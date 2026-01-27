@@ -3,6 +3,7 @@
 const tareaEntrada = document.getElementById("tareaEntrada");
 const botonAgregar = document.getElementById("botonAgregar");
 const contenedorTareas = document.getElementById("contenedorTareas");
+const mensaje = document.getElementById("mensaje");
 
 
 
@@ -30,6 +31,30 @@ function crearElementoTarea(){
   //Agregamos el texto del usuario
   tareaTexto.innerText = tareaEntrada.value;
 
+  //Escuchadores de los iconos 
+  iconoCompletada.addEventListener("click", (e) => {
+    //Codigo que se ejecuta
+    const tareaElemento = e.target.parentNode.parentNode;
+    const esCompletada = tareaElemento.classList.contains("tarea-completada");
+
+    tareaElemento.classList.toggle("tarea-completada"); 
+    
+    if(esCompletada){
+      e.target.classList.remove("bi-check-circle");
+      e.target.classList.add("bi-bi-dash-circle");
+    } else {
+      e.target.classList.remove("bi-check-circle");
+      e.target.classList.add("bi-bi-dash-circle");
+
+    }
+  })
+
+  iconoEliminar.addEventListener("click",(e) => {
+    //Codigo que ejecuta
+    const tareaElemento = e.target.parentNode.parentNode;
+    tareaElemento.remove();
+  })
+
 
   //Retornamos la estructura de la tarea 
   return tareaContenedor;
@@ -42,11 +67,51 @@ botonAgregar.addEventListener("click",agregarTarea);
 /* función agregar el elemento tarea */
 
 function agregarTarea() {
-  //Traemos elemento retornado por la función crearElementoTarea
+  //Generar la constante para evaluar si hay contexto o no
+  const texto = tareaentrada.value.trim();
+
+  //Evaluar la constante de texto
+  if (texto) {
+
+     //Traemos elemento retornado por la función crearElementoTarea
   const elementoTarea = crearElementoTarea();
   contenedorTareas.append(elementoTarea);
+
+  //Reiniciar el valor del Input
+  tareaEntrada.evalue = "";
+
+  //mostrar el mensaje de tarea creada satisfactoriamente 
+  mensaje.textContent = "tarea creada satisfactoriamente"
+
+  }else{
+    //Ejecutas esto otro
+    mensaje.textContent = "no escribiste nada chamaco";
+  }
 
   //Reiniciar el value del input
   tareaEntrada.value = "";
 }
-//
+
+/* Hacemos que  al presionar la tecla enter el imput se agregue la tarea */
+
+document.addEventListener("keydown", (e) => {
+ //Evaluar la tecla presionada 
+ if(e.key == "Enter") {
+  // Esto ocurre
+  agregarTarea();
+ }
+})
+
+/* Mostrar un mensaje al escribir  */
+
+tareaEntrada.addEventListener("input",() => {
+  //Evaluamos si el valor del input esta vacio
+  if(tareaEntrada.value.trim() === ""){
+
+    mensaje.textContent = "Escribe tu proxima tarea! 😜";
+
+  }else{
+    mensaje.textContent = "Al finalizar presiona Enter";
+
+  }
+})
